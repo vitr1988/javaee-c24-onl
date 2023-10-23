@@ -16,6 +16,7 @@
 
         <javax.servlet-api.version>4.0.1</javax.servlet-api.version>
         <maven-war-plugin.version>3.4.0</maven-war-plugin.version>
+        <lombok.version>1.18.26</lombok.version>
     </properties>
 
     <dependencies>
@@ -24,6 +25,11 @@
             <artifactId>javax.servlet-api</artifactId>
             <version>${javax.servlet-api.version}</version>
 <!--            <scope>provided</scope>-->
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
     </dependencies>
 
