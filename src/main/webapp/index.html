@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Hello World</title>
+    <script src="webjars/jquery/3.3.1/jquery.min.js"></script>
+<!--    <script type="text/javascript">-->
+<!--        $(function(){-->
+<!--            console.log( "ready!" );-->
+<!--            alert('ready!')-->
+<!--        });-->
+<!--    </script>-->
+    <script src="js/script.js"></script>
+    <link rel="stylesheet" href="css/style.css"/>
+    <style>
+        #textBlock {
+            color: green;
+        }
+
+        .green {
+            color: green;
+        }
+
+        .bold {
+            font-weight: bold !important;
+        }
+    </style>
+</head>
+<body>
+    <p style="color: red; background-color: black">Hello world!</p>
+    <span id="textBlock">New Text</span>&nbsp;<br/>
+    <span class="green bold" style="font-weight: normal;">Здесь могла быть Ваша реклама</span>
+    <h1>Header 1</h1>
+    <h2>Header 2</h2>
+    <h3>Header 3</h3>
+    <h4>Header 4</h4>
+    <h5>Header 5</h5>
+    <h6>Header 6</h6>
+    <strong>Так делать не надо!</strong>
+    <i>Так тоже делать не надо!</i>
+    <ul>
+        <li>Элемент списка 1</li>
+        <li>Элемент списка 2</li>
+        <li>Элемент списка 3</li>
+        <li>Элемент списка 4</li>
+        <li>Элемент списка 5</li>
+    </ul>
+
+    <ol>
+        <li>Нумерованный элемент списка 1</li>
+        <li>Нумерованный элемент списка 2</li>
+        <li>Нумерованный элемент списка 3</li>
+        <li>Нумерованный элемент списка 4</li>
+        <li>Нумерованный элемент списка 5</li>
+    </ol>
+
+    <a href="https://google.com">Поисковик</a>
+
+    <img height="100" width="100" src="https://img.freepik.com/free-photo/a-cupcake-with-a-strawberry-on-top-and-a-strawberry-on-the-top_1340-35087.jpg"/>
+
+    <table>
+        <thead>
+            <tr>
+                <td>Идентификатор</td>
+                <td>ФИО</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Иванов Виталий</td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Витальев Иван</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <div>
+            <div>Идентификатор</div>
+            <div>ФИО</div>
+        </div>
+        <div>
+            <div>1</div>
+            <div>Иванов Виталий</div>
+        </div>
+    </div>
+
+    <form action="http://localhost:8080/javaee_c24_onl_war_exploded/hello" method="post">
+        <label for="name">Укажите ФИО: <input id="name" type="text" name="name" placeholder="Name"/></label>
+        <label for="age">Укажите возраст: <input id="age" type="number" name="age" value="18" placeholder="Age"/></label>
+        <label for="birthday">Укажите ДР: <input id="birthday" type="date" name="birthday" placeholder="birthday"/></label>
+        <label for="sex">Мужской пол: <input id="sex" type="checkbox" name="sex" placeholder="sex"/></label>
+<!--        <input type="submit"/> пример комментария -->
+        <label for="height">Рост: <select id="height" name="height">
+            <option value="no"></option>
+            <option value="150">150</option>
+            <option value="160">160</option>
+            <option>170</option>
+            <option>180</option>
+            <option>190</option>
+            <option>200</option>
+        </select>
+        </label>
+<!--        <button id="pushButton" onclick="push()">Нажми</button>-->
+        <button id="pushButton">Нажми</button>
+    </form>
+<!--    <script type="text/javascript">-->
+<!--        function push() {-->
+<!--            // alert('Hello World!');-->
+<!--        }-->
+
+<!--        document.getElementById('pushButton').addEventListener('click', function() {-->
+<!--            alert('Hello World123!');-->
+<!--        });-->
+<!--    </script>-->
+</body>
+</html>
