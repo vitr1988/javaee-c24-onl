@@ -19,6 +19,7 @@
         <lombok.version>1.18.26</lombok.version>
 
         <jquery.version>3.3.1</jquery.version>
+        <bootstrap.version>5.3.0</bootstrap.version>
     </properties>
 
     <dependencies>
@@ -31,6 +32,11 @@
             <groupId>org.webjars</groupId>
             <artifactId>jquery</artifactId>
             <version>${jquery.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.webjars</groupId>
+            <artifactId>bootstrap</artifactId>
+            <version>${bootstrap.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

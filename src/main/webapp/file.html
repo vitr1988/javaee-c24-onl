@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>File Upload TMS Example Servlet - Java web application</title>
+    <link rel="stylesheet" href="webjars/bootstrap/5.3.0/css/bootstrap.min.css"/>
+</head>
+<body>
+<div id="container" class="container">
+    <div>
+        <div class="accordion accordion-flush" id="accordionFlushExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+                        Accordion Item #1
+                    </button>
+                </h2>
+                <div id="flush-collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate
+                        the <code>.accordion-flush</code> class. This is the first item's accordion body.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+                        Accordion Item #2
+                    </button>
+                </h2>
+                <div id="flush-collapseTwo" class="accordion-collapse collapse" data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate
+                        the <code>.accordion-flush</code> class. This is the second item's accordion body. Let's imagine
+                        this being filled with some actual content.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#flush-collapseThree" aria-expanded="false"
+                            aria-controls="flush-collapseThree">
+                        Accordion Item #3
+                    </button>
+                </h2>
+                <div id="flush-collapseThree" class="accordion-collapse collapse"
+                     data-bs-parent="#accordionFlushExample">
+                    <div class="accordion-body">Placeholder content for this accordion, which is intended to demonstrate
+                        the <code>.accordion-flush</code> class. This is the third item's accordion body. Nothing more
+                        exciting happening here in terms of content, but just filling up the space to make it look, at
+                        least at first glance, a bit more representative of how this would look in a real-world
+                        application.
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h3> Choose File to Upload in Server </h3>
+        <form action="/javaee_c24_onl_war_exploded/load-book" method="post" enctype="multipart/form-data">
+            <input type="file" name="file"/>
+            <input type="submit" value="upload"/>
+        </form>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-6 mb-3 mb-sm-0">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Общая информация</h5>
+                    <p class="card-text">ФИО: Иванов Виталий Андреевич.</p>
+                    <a href="me.html" class="btn btn-primary">Переход на профиль</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Дополнительно</h5>
+                    <p class="card-text">Хобби: плавание, волейбол, английский</p>
+                    <a href="#" class="btn btn-primary">Больше подробностей</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="password" name="pass">
+</div>
+<script src="webjars/bootstrap/5.3.0/js/bootstrap.min.js"/>
+</body>
+</html>
