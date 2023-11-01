@@ -1,3 +1,8 @@
 ul > li {
     font-style: italic;
 }
+
+#header, #footer {
+    text-align: center;
+    font-size: 12px;
+}
