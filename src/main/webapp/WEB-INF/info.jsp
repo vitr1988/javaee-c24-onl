@@ -33,7 +33,7 @@
         <% String name = (String) request.getAttribute("name"); %>
         <p>My name is <%= Objects.toString(name, "Guest") %></p>
         <p>My name is <%= name %></p>
-        <p>My name is ${sessionScope.name}</p>
+        <p>My name EL is ${name}</p>
         <p>Current time is <%= getFormattedTime(now()) %></p>
     </div>
     <% } %>
