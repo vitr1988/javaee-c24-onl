@@ -53,7 +53,7 @@
 
   <fmt:formatNumber value="${money}" type="currency"/>
 
-  <h:hello/>
+  <h:hello name="Peter"/>
 
 </body>
 </html>
