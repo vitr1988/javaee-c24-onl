@@ -13,10 +13,9 @@ public class OrderService {
     private Validator<Order> validator = new SuperOrderValidator();
 
     @Setter
-    private OrderStorage storage = new DbOrderStorage();
-
+    private OrderStorage storage = DbOrderStorage.getInstance();
     @Setter
-    private AbstractNotificationService notificationService = new NotificationService();
+    private AbstractNotificationService notificationService = NotificationService.getInstance();
 
     public void process(Order order) {
         System.out.println("process(order => " + order + ")");

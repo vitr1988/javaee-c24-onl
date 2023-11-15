@@ -10,7 +10,10 @@ public class OrderRunner {
     private static final OrderService ORDER_SERVICE;
 
     static {
-        ORDER_SERVICE = new OrderService(new OrderValidator(), new DbOrderStorage(), new NotificationService());
+        ORDER_SERVICE = new OrderService(
+                new OrderValidator(),
+                DbOrderStorage.getInstance(),
+                NotificationService.getInstance());
 //        ORDER_SERVICE.setValidator(new OrderValidator());
     }
 
