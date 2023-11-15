@@ -1,12 +1,22 @@
 package by.teachmeskills.lesson29.servlet.solid;
 
 import by.teachmeskills.lesson29.servlet.solid.domain.Order;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderService {
 
-    private OrderValidator validator = new SuperOrderValidator();
-    private OrderStorage storage = new OrderStorage();
-    private NotificationService notificationService = new NotificationService();
+    @Setter
+    private Validator<Order> validator = new SuperOrderValidator();
+
+    @Setter
+    private OrderStorage storage = new DbOrderStorage();
+
+    @Setter
+    private AbstractNotificationService notificationService = new NotificationService();
 
     public void process(Order order) {
         System.out.println("process(order => " + order + ")");

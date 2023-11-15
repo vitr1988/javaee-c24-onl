@@ -7,7 +7,12 @@ import java.math.BigDecimal;
 
 public class OrderRunner {
 
-    private static final OrderService ORDER_SERVICE = new TransactionalOrderService();
+    private static final OrderService ORDER_SERVICE;
+
+    static {
+        ORDER_SERVICE = new OrderService(new OrderValidator(), new DbOrderStorage(), new NotificationService());
+//        ORDER_SERVICE.setValidator(new OrderValidator());
+    }
 
     public static void main(String[] args) {
         Order order = new Order();
