@@ -24,7 +24,7 @@ public class SecurityFilter extends HttpFilter {
         if (req.getSession().getAttribute("test") == null) {
             res.getWriter().println("You should be authenticated");
         } else {
-            super.doFilter(req, res, chain);
+            chain.doFilter(req, res);
         }
         // postconditions
     }
