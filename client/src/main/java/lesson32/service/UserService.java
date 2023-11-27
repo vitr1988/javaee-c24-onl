@@ -1,16 +1,15 @@
 package lesson32.service;
 
-import lesson32.entity.User;
-import lesson32.mapper.UserMapper;
 import lesson32.dao.UserDao;
 import lesson32.dto.UserDto;
-import lesson32.mapper.impl.UserMapperImpl;
+import lesson32.entity.User;
+import lesson32.mapper.UserMapper;
 import org.mapstruct.factory.Mappers;
 
 public class UserService {
 
     private static final UserService INSTANCE = new UserService();
-    private static final UserMapper userMapper = new UserMapperImpl();//Mappers.getMapper(UserMapper.class);
+    private static final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     private UserDao userDao = new UserDao();
 

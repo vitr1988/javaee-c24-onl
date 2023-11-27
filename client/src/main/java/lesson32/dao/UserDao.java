@@ -1,13 +1,12 @@
 package lesson32.dao;
 
-import lesson32.dto.UserDto;
 import lesson32.entity.User;
 import lesson32.mapper.UserMapper;
-import lesson32.mapper.impl.UserMapperImpl;
+import org.mapstruct.factory.Mappers;
 
 public class UserDao {
 
-    private static final UserMapper userMapper = new UserMapperImpl();// Mappers.getMapper(UserMapper.class);
+    private static final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     private Long counter = 1L;
 
