@@ -13,6 +13,7 @@
         <module>common-lib</module>
         <module>servlet</module>
         <module>client</module>
+        <module>logging</module>
     </modules>
 
 </project>

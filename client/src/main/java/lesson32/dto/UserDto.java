@@ -81,12 +81,12 @@ public class UserDto implements Cloneable {
         return "UserDto(id=" + this.getId() + ", fullName=" + this.getFullName() + ", sex=" + this.isSex() + ", roles=" + this.getRoles() + ")";
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        UserDto clone = (UserDto) super.clone();
-        clone.setRole(this.role.clone());
-        return clone;
-    }
+//    @Override
+//    protected Object clone() throws CloneNotSupportedException {
+//        UserDto clone = (UserDto) super.clone();
+//        clone.setRole(this.role.clone());
+//        return clone;
+//    }
 
     public static void main(String[] args) throws Exception {
         UserDto newUser = new UserDto(1L, "Vitaly");
