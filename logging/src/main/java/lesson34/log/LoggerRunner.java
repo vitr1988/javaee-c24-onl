@@ -20,5 +20,6 @@ public class LoggerRunner {
 //        LOGGER.log(Level.INFO, userDto + "");
         LOGGER.info(userDto);
         userService.save(userDto);
+        new UserDto().setId(1L).setFullName("Vitaly Ivanov").setSex(false);
     }
 }

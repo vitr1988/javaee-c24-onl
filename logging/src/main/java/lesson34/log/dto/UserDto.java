@@ -1,33 +1,37 @@
 package lesson34.log.dto;
 
-public class UserDto {
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+
+@Accessors(chain = true)
+@Setter
+@NoArgsConstructor
+public class UserDto implements Cloneable {
 
     private Long id;
     private String fullName;
     private boolean sex;
+    private RoleDto roleDto;
+
+    public UserDto(UserDto userDto) {
+        this.id = userDto.id;
+        this.fullName = userDto.fullName;
+        this.sex = userDto.sex;
+//        this.roleDto = userDto.roleDto.clone();
+        this.roleDto = new RoleDto(userDto.roleDto);
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getFullName() {
         return fullName;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
     public boolean isSex() {
         return sex;
-    }
-
-    public void setSex(boolean sex) {
-        this.sex = sex;
     }
 
     @Override
@@ -37,5 +41,10 @@ public class UserDto {
                 ", fullName='" + fullName + '\'' +
                 ", sex=" + sex +
                 '}';
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
