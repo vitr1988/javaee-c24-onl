@@ -7,6 +7,8 @@ public class RoleDto implements Cloneable {
     private Long id;
     private String name;
 
+    private UserDto[] users = new UserDto[] {new UserDto(), new UserDto()};
+
     public RoleDto(RoleDto roleDto) {
         this.id = roleDto.getId();
         this.name = roleDto.getName();
