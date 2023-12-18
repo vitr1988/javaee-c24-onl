@@ -6,4 +6,6 @@ public interface ReportDao {
 
     void save(Report report);
 
+//    String getHello();
+
 }

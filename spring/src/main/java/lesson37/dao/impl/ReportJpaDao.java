@@ -13,4 +13,9 @@ public class ReportJpaDao implements ReportDao {
     public void save(Report report) {
         log.info("Try to save as entity " + report);
     }
+
+//    @Override
+//    public String getHello() {
+//        return null;
+//    }
 }
