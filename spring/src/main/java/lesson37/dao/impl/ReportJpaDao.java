@@ -18,4 +18,9 @@ public class ReportJpaDao implements ReportDao {
 //    public String getHello() {
 //        return null;
 //    }
+
+    @Override
+    public String getBeanName() {
+        return "jpa";
+    }
 }

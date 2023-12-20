@@ -3,40 +3,60 @@ package lesson37.service.impl;
 import lesson37.dao.ReportDao;
 import lesson37.model.Report;
 import lesson37.service.ReportService;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Log4j
 @Component
 public class ReportServiceImpl implements ReportService {
 
-    private final ReportDao reportDao;
+//    private final List<ReportDao> reportDaos;
+    private final Map<String, ReportDao> reportDaoMap;
     private final String hello;
-    private final ReportService self;
 
-    @Autowired
-    public ReportServiceImpl(@Qualifier("defaultReportDao") ReportDao reportDao, @Value("${hello}") String hello, @Lazy ReportService reportService) {
-        this.reportDao = reportDao;
+    @Setter(onMethod_ = @Autowired)
+    private ReportService self;
+
+    public ReportServiceImpl(List<ReportDao> reportDaos, String hello) {
+//        this.reportDaos = reportDaos;
+        this.reportDaoMap = reportDaos.stream().collect(
+                Collectors.toMap(
+                        ReportDao::getBeanName,
+                        Function.identity(),
+                        (oldValue, newValue) -> newValue
+                )
+        );
         this.hello = hello;
-        this.self = reportService;
-//        Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{ReportService.class}, new InvocationHandler() {
-//            @Override
-//            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//                //todo: предусловие
-//                Object invoke = method.invoke(this, args);
-//                //todo: постусловие
-//                return invoke;
-//            }
-//        });
     }
+
+//    @Autowired
+//    public ReportServiceImpl(@Qualifier("defaultReportDao") ReportDao reportDao, @Value("${hello}") String hello
+////                             @Lazy @Autowired(required = false) Optional<ReportService> reportService
+//    ) {
+//        this.reportDao = reportDao;
+//        this.hello = hello;
+////        this.self = reportService.orElse(null);
+////        Proxy.newProxyInstance(this.getClass().getClassLoader(), new Class[]{ReportService.class}, new InvocationHandler() {
+////            @Override
+////            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+////                //todo: предусловие
+////                Object invoke = method.invoke(this, args);
+////                //todo: постусловие
+////                return invoke;
+////            }
+////        });
+//    }
 
     @PostConstruct
     public void init() {
@@ -48,11 +68,12 @@ public class ReportServiceImpl implements ReportService {
         log.info("Component was destroyed");
     }
 
-    public ReportServiceImpl(ReportDao reportDao) {
-        this.reportDao = reportDao;
-        this.hello = "hello";
-        this.self = new ReportServiceImpl(reportDao, hello, null);
-    }
+//    public ReportServiceImpl(ReportDao reportDao) {
+//        this.reportDaos = List.of(reportDao);
+//        this.hello = "hello";
+//        this.self = new ReportServiceImpl(reportDaos, hello);
+////        this.self = new ReportServiceImpl(reportDao, hello, null);
+//    }
 
 //    public ReportServiceImpl(@Qualifier("defaultReportDao") ReportDao reportDao, String hello) {
 //        this.reportDao = reportDao;
@@ -62,7 +83,9 @@ public class ReportServiceImpl implements ReportService {
     @Override
     public void generateAndSave() {
         Report report = new Report(1L, "Annual report");
-        reportDao.save(report);
+        reportDaoMap.values().stream().findAny()
+                .stream()
+                .peek(it -> it.save(report));
     }
 
     @Override
@@ -74,6 +97,11 @@ public class ReportServiceImpl implements ReportService {
                 new Report(3L, "Daily report"),
                 new Report(4L, hello)
         );
+        int index = new Random().nextBoolean() ? 0 : 1;
+        log.info("index for report " + index);
+        String key = new ArrayList<>(reportDaoMap.keySet()).get(index);
+        log.info("bean name for report " + key);
+        ReportDao reportDao = reportDaoMap.get(key);
         reports.forEach(reportDao::save);
         log.info(reportDao);
 //        log.info("ReportServiceImpl#generateSomeAndSave end");

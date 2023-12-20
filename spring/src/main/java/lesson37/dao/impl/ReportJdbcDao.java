@@ -32,6 +32,11 @@ public class ReportJdbcDao implements ReportDao {
         log.info("Try to save report " + report);
     }
 
+    @Override
+    public String getBeanName() {
+        return "jdbc";
+    }
+
 //    @Autowired
 //    public void setHello(@Value("${hello}") String hello) {
 //        this.hello = hello;

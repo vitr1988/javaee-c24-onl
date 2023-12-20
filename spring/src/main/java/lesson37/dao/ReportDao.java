@@ -6,6 +6,8 @@ public interface ReportDao {
 
     void save(Report report);
 
+    String getBeanName();
+
 //    String getHello();
 
 }

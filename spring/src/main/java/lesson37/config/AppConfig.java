@@ -29,8 +29,8 @@ public class AppConfig {
     }
 
 
-//    @Bean
-//    String helloWorld() {
-//        return "Hello world";
-//    }
+    @Bean
+    String helloWorld() {
+        return "Hello world";
+    }
 }
