@@ -16,4 +16,6 @@ public interface UserService {
     void remove(Long id);
 
     Optional<UserDto> findById(Long id);
+
+    void createNewUser();
 }

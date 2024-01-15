@@ -55,7 +55,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDto> findById(Long id) {
-        return userDao.findById(id)
-                .map(it -> new UserDto(it.getId(), it.getUserName(), it.getLogin(), it.getPassword(), it.getRole()));
+        Optional<User> user = userDao.findById(id);
+        user.ifPresent(it -> log.info("user %s".formatted(it)));
+        return user.map(it -> new UserDto(it.getId(), it.getUserName(), it.getLogin(), it.getPassword(), it.getRole()));
+    }
+
+    @Override
+    public void createNewUser() {
+        userDao.createNewUser();
     }
 }

@@ -72,4 +72,10 @@ public class UserController {
 //        model.addAttribute("detailedMessage", exception.getMessage());
 //        return "failureRegistration";
 //    }
+
+    @PostMapping("/new")
+    public String createNewUser() {
+        userService.createNewUser();
+        return "redirect:/";
+    }
 }
