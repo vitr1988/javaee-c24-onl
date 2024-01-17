@@ -16,7 +16,7 @@
         <span>${user.userName}</span>
         <span>${user.login}</span>
         <span>${user.password}</span>
-        <span>${user.role}</span>
+<%--        <span>${user.role}</span>--%>
     </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package by.teachmeskills.lesson39.dao;
 
-import by.teachmeskills.lesson39.entity.Phone;
+import by.teachmeskills.lesson39.entity.Authority;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,21 +10,21 @@ import javax.persistence.PersistenceContext;
 
 @Repository
 @RequiredArgsConstructor
-public class PhoneDao {
+public class AuthorityDao {
 
-    //    private final SessionFactory sessionFactory;
+//    private final SessionFactory sessionFactory;
+
     @PersistenceContext
     private EntityManager entityManager;
 
     @Transactional
-    public Phone save(Phone phone) {
+    public Authority save(Authority authority) {
 //        Session currentSession = sessionFactory.getCurrentSession();
-        if (phone.getId() == null) {
-            entityManager.persist(phone);
+        if (authority.getId() == null) {
+            entityManager.persist(authority);
         } else {
-            entityManager.merge(phone);
+            entityManager.merge(authority);
         }
-        return phone;
+        return authority;
     }
-
 }

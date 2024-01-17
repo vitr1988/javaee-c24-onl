@@ -3,6 +3,7 @@ package by.teachmeskills.lesson39.service;
 import by.teachmeskills.lesson39.dto.UserDto;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public interface UserService {
     String name();
@@ -16,6 +17,8 @@ public interface UserService {
     void remove(Long id);
 
     Optional<UserDto> findById(Long id);
+
+    UserDto findById(UUID id);
 
     void createNewUser();
 }

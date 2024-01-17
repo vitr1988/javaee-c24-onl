@@ -26,13 +26,15 @@ public class Phone {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
 
+    private String code;
     private String number; // 11 digits
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    public Phone(String number) {
+    public Phone(String code, String number) {
+        this.code = code;
         this.number = number;
     }
 }

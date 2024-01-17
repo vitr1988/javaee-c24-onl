@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Log4j
 @Service // @Component
@@ -57,8 +58,20 @@ public class UserServiceImpl implements UserService {
     public Optional<UserDto> findById(Long id) {
         Optional<User> user = userDao.findById(id);
         user.ifPresent(it -> log.info("user %s".formatted(it)));
-        return user.map(it -> new UserDto(it.getId(), it.getUserName(), it.getLogin(), it.getPassword(), it.getRole()));
+        return user.map(it -> new UserDto(/*it.getId(),*/ null, it.getUserName(), it.getLogin(), it.getPassword()
+                , it.getAuthority().getRole()
+        ));
     }
+
+    @Override
+    public UserDto findById(UUID id) {
+        User it = userDao.findById(id);
+//        user.ifPresent(it -> log.info("user %s".formatted(it)));
+        return new UserDto(/*it.getId(),*/null, it.getUserName(), it.getLogin(), it.getPassword()
+                , it.getAuthority().getRole()
+        );
+    }
+
 
     @Override
     public void createNewUser() {
