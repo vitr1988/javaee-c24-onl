@@ -1,6 +1,6 @@
-package by.teachmeskills.lesson41.controller;
+package by.teachmeskills.lesson46.controller;
 
-import by.teachmeskills.lesson41.dto.User;
+import by.teachmeskills.lesson46.dto.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

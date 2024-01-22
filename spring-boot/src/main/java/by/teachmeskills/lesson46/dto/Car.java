@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson41.dto;
+package by.teachmeskills.lesson46.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

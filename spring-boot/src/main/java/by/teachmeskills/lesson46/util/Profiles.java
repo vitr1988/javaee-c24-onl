@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson41.util;
+package by.teachmeskills.lesson46.util;
 
 import lombok.experimental.UtilityClass;
 

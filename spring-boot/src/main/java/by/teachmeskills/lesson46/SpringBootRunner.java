@@ -1,9 +1,9 @@
-package by.teachmeskills.lesson41;
+package by.teachmeskills.lesson46;
 
-import by.teachmeskills.lesson41.config.AppProperties;
-import by.teachmeskills.lesson41.dto.Car;
-import by.teachmeskills.lesson41.service.CalculatorService;
-import by.teachmeskills.lesson41.service.TestService;
+import by.teachmeskills.lesson46.config.AppProperties;
+import by.teachmeskills.lesson46.dto.Car;
+import by.teachmeskills.lesson46.service.CalculatorService;
+import by.teachmeskills.lesson46.service.TestService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

@@ -1,4 +1,4 @@
-package by.teachmeskills.lesson41.config;
+package by.teachmeskills.lesson46.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
