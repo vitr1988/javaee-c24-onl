@@ -1,0 +1,6 @@
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 50MB
+      max-file-size: 20MB

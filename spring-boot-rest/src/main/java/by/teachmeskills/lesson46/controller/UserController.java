@@ -3,10 +3,16 @@ package by.teachmeskills.lesson46.controller;
 import by.teachmeskills.lesson46.dto.UserDto;
 import by.teachmeskills.lesson46.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,39 +20,72 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+@Slf4j
+@Validated
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
-//    @ResponseBody
-    @GetMapping
-    public List<UserDto> getAll() {
+    //    @ResponseBody
+    @GetMapping(produces = "application/xml")
+    public List<UserDto> getAll(@CookieValue(value = "test", required = false) String cookieValue) {
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                log.info("cookie name {} with value {}", cookie.getName(), cookie.getValue());
+            }
+        }
+        log.info("Test cookie {}", cookieValue);
+        Cookie cookie = new Cookie("test", "123");
+        response.addCookie(cookie);
         return userService.getAll();
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<UserDto> getById(@PathVariable("userId") Long id) {
         Optional<UserDto> result = userService.getById(id);
         return result.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
     }
 
+    @GetMapping(value = "/{userId}/avatar", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getAvatarById(@PathVariable("userId") Long id) {
+        Optional<UserDto> result = userService.getById(id);
+        return result
+                .map(UserDto::getAvatar)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    }
+
+    @SneakyThrows
     @PostMapping
-    public ResponseEntity<UserDto> create(@RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> create(
+            @RequestPart("avatar") MultipartFile avatarFile
+            , @RequestPart("user") @Valid UserDto userDto) {
         if (userDto.getId() != null) {
             return ResponseEntity.badRequest().build();
         }
+        userDto.setAvatar(avatarFile.getBytes());
+        log.info("file name {} {}", avatarFile.getName(), avatarFile.getBytes().length);
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add("X-UniqueHeader", UUID.randomUUID().toString());
         return new ResponseEntity<>(
@@ -56,7 +95,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody UserDto userDto) {
+    public ResponseEntity<UserDto> update(@PathVariable Long id, @RequestBody @Valid UserDto userDto) {
         if (!Objects.equals(id, userDto.getId())) {
             return ResponseEntity.badRequest().build();
         }
