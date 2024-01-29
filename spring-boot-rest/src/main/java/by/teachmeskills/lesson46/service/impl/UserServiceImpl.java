@@ -4,20 +4,29 @@ import by.teachmeskills.lesson46.dto.UserDto;
 import by.teachmeskills.lesson46.repository.UserRepository;
 import by.teachmeskills.lesson46.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
+import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final RestTemplate restTemplate;
 
     @Override
     public List<UserDto> getAll() {
         return userRepository.getAll();
+    }
+
+    @Override
+    @SneakyThrows
+    public List<UserDto> getAllByHttp() {
+        return restTemplate.getForObject(new URI("http://localhost:8080/api/users"), List.class);
     }
 
     @Override
@@ -36,7 +45,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDto> getById(Long id) {
-        return userRepository.getById(id);
+    public UserDto getById(Long id) {
+        return userRepository.getById(id)
+//                .orElseThrow(() -> new NotFoundException("Пользователь с идентификатором %d не найден".formatted(id), id));
+                .orElseThrow(() -> new RuntimeException("Пользователь с идентификатором %d не найден".formatted(id)));
     }
 }

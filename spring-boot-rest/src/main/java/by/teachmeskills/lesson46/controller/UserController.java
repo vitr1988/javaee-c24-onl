@@ -2,6 +2,12 @@ package by.teachmeskills.lesson46.controller;
 
 import by.teachmeskills.lesson46.dto.UserDto;
 import by.teachmeskills.lesson46.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -39,6 +44,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@Tag(name = "users", description = "There is some information about users of the system")
 public class UserController {
 
     private final UserService userService;
@@ -47,7 +53,10 @@ public class UserController {
 
     //    @ResponseBody
     @GetMapping(produces = "application/xml")
-    public List<UserDto> getAll(@CookieValue(value = "test", required = false) String cookieValue) {
+    @Operation(operationId = "all", description = "Fetch all users")
+    public List<UserDto> getAll(
+            @Parameter(required = false) @CookieValue(value = "test", required = false) String cookieValue
+    ) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
@@ -60,20 +69,25 @@ public class UserController {
         return userService.getAll();
     }
 
-    @GetMapping(value = "/{userId}", produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<UserDto> getById(@PathVariable("userId") Long id) {
-        Optional<UserDto> result = userService.getById(id);
-        return result.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+    @GetMapping("/http")
+    public List<UserDto> findAll() {
+        return userService.getAllByHttp();
     }
 
+    @GetMapping(value = "/{userId}"//, produces = MediaType.APPLICATION_XML_VALUE
+    )
+    @ApiResponse(responseCode = "200", description = "get info about user if everything is ok")
+    @ApiResponse(responseCode = "400", description = "validation failed")
+    public ResponseEntity<UserDto> getById(@PathVariable("userId") Long id) {
+        UserDto result = userService.getById(id);
+        return ResponseEntity.ok(result);
+    }
+
+    @Hidden
     @GetMapping(value = "/{userId}/avatar", produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<byte[]> getAvatarById(@PathVariable("userId") Long id) {
-        Optional<UserDto> result = userService.getById(id);
-        return result
-                .map(UserDto::getAvatar)
-                .map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.BAD_REQUEST).build());
+        UserDto result = userService.getById(id);
+        return ResponseEntity.ok(result.getAvatar());
     }
 
     @SneakyThrows

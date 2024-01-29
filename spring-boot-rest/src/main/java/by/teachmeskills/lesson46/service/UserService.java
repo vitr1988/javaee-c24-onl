@@ -3,7 +3,6 @@ package by.teachmeskills.lesson46.service;
 import by.teachmeskills.lesson46.dto.UserDto;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserService {
     List<UserDto> getAll();
@@ -14,5 +13,7 @@ public interface UserService {
 
     void deleteById(Long id);
 
-    Optional<UserDto> getById(Long id);
+    UserDto getById(Long id);
+
+    List<UserDto> getAllByHttp();
 }
