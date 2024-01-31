@@ -1,16 +1,17 @@
 package by.teachmeskills.lesson46.controller;
 
 import by.teachmeskills.lesson46.dto.UserDto;
+import by.teachmeskills.lesson46.jpa.OffsetLimitPageable;
 import by.teachmeskills.lesson46.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,7 +57,8 @@ public class UserController {
     @GetMapping(produces = "application/xml")
     @Operation(operationId = "all", description = "Fetch all users")
     public List<UserDto> getAll(
-            @Parameter(required = false) @CookieValue(value = "test", required = false) String cookieValue
+            @Parameter(required = false) @CookieValue(value = "test", required = false) String cookieValue,
+            @RequestParam(required = false) String name
     ) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
@@ -66,12 +69,19 @@ public class UserController {
         log.info("Test cookie {}", cookieValue);
         Cookie cookie = new Cookie("test", "123");
         response.addCookie(cookie);
-        return userService.getAll();
+        return StringUtils.isEmpty(name) ? userService.getAll() : userService.findByName(name);
     }
 
     @GetMapping("/http")
-    public List<UserDto> findAll() {
-        return userService.getAllByHttp();
+    public List<UserDto> findAll(@RequestParam(defaultValue = "10") Integer limit, @RequestParam(defaultValue = "0") Long offset) {
+//        return userService.getAllByHttp();
+        if (limit > 10) {
+            limit = 10;
+        }
+        if (offset < 0) {
+            offset = 0L;
+        }
+        return userService.getAll(OffsetLimitPageable.of(offset, limit, Sort.by(Sort.Direction.DESC, "id")));
     }
 
     @GetMapping(value = "/{userId}"//, produces = MediaType.APPLICATION_XML_VALUE
