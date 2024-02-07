@@ -35,3 +35,7 @@ springdoc:
 #  endpoints.web.exposure.include: openapi, swagger-ui, health, metrics, prometheus, env, beans
 #  server:
 #    port: 9090
+
+jwt:
+  secret: '\\_//\\_//\\_//P@s$w0rD2024\\_//\\_//\\_//'
+  expiration: '10m'

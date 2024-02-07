@@ -1,10 +1,11 @@
 package by.teachmeskills.lesson46.config;
 
+import by.teachmeskills.lesson46.config.security.JwtFilter;
 import by.teachmeskills.lesson46.service.AuthenticationHandler;
-import by.teachmeskills.lesson46.service.Authorities;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,10 +13,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static by.teachmeskills.lesson46.controller.AuthController.AUTH_REQUEST_MAPPING;
 import static by.teachmeskills.lesson46.service.Authorities.ADMIN;
 
 @EnableWebSecurity
@@ -28,6 +33,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final AuthenticationHandler authenticationHandler;
 
+    private final JwtFilter jwtFilter;
+
     @Override
     public void configure(WebSecurity web) {
         web.ignoring().antMatchers("/css/*/style.css", "/webjars/**", "/images/**");
@@ -35,21 +42,33 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
-        http//.csrf().disable()
+        http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/").permitAll()
+                .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
                 .and()
                 .authorizeRequests().antMatchers("/api/**").authenticated()
                 .antMatchers("/genre/**", "/api/genres/*")
 //                .hasRole("ROLE_" + ADMIN)
                 .hasAuthority(ADMIN)
                 .and()
-                .formLogin()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                .formLogin()
 //                    .loginPage("/users/login")
 //                .httpBasic()
                 .and()
+                .addFilterAfter(jwtFilter, AnonymousAuthenticationFilter.class)
+//                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .logout()
-                .addLogoutHandler(authenticationHandler);
+//                .logout(logout -> logout
+//                        .logoutUrl("/my/logout")
+//                        .logoutSuccessUrl("/my/index")
+////                        .logoutSuccessHandler(authenticationHandler)
+//                        .invalidateHttpSession(true)
+//                        .addLogoutHandler(authenticationHandler)
+//                        .deleteCookies("JSESSIONID")
+//                )
+//                .addLogoutHandler(authenticationHandler)
+        ;
     }
 
     @Bean
