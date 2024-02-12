@@ -2,5 +2,6 @@ package by.teachmeskills.lesson46.entity;
 
 public enum RoleEnum {
 
-    GUEST, USER, ADMIN, SUPERADMIN
+    GUEST, USER, ADMIN, SUPERADMIN;
+
 }

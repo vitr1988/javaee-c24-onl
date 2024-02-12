@@ -1,4 +1,6 @@
 spring:
+  main:
+    banner-mode: 'off'
   servlet:
     multipart:
       enabled: true
@@ -6,8 +8,9 @@ spring:
       max-file-size: 20MB
   jpa:
     show-sql: true
+    generate-ddl: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate #none
     open-in-view: false
     properties:
       hibernate:
@@ -19,6 +22,9 @@ spring:
     driver-class-name: org.postgresql.Driver
     hikari:
       leak-detection-threshold: 5000 # in msecs
+  liquibase:
+    change-log: 'classpath:db-migrations/changeLog.xml'
+    enabled: true
 
 springdoc:
 #  show-actuator: true

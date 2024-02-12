@@ -1,0 +1,121 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Vitalii Ivanov" id="Create-table-roles">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="roles"/>
+            </not>
+        </preConditions>
+        <createTable tableName="roles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Vitalii Ivanov" id="Create-table-users">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="users"/>
+            </not>
+        </preConditions>
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+            <column name="user_name" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="login" type="varchar(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false" foreignKeyName="fk_user_role" references="roles(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet author="Vitalii Ivanov" id="Create-admin-role-with-user">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0"><![CDATA[
+                select count(*)
+                from roles
+                where name = 'ADMIN'
+                ]]>
+                </sqlCheck>
+        </preConditions>
+
+        <insert tableName="roles">
+            <!-- Id is auto incremented -->
+            <column name="name" value="ADMIN"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="user_name" value="admin"/>
+            <column name="login" value="admin"/>
+            <column name="password" value="$2a$10$Gq4Gjp73EBMFcm4Bq5G7i..XCUfMif5u69EvJKCaJlNVzvzZb2lVO"/>
+            <column name="status" value="OK"/>
+            <column name="role_id" valueComputed="(select id from roles where name = 'ADMIN')"/>
+        </insert>
+
+    </changeSet>
+
+    <changeSet author="Vitalii Ivanov" id="Create-guest-role-with-user">
+        <preConditions onFail="MARK_RAN">
+                <sqlCheck expectedResult="0"><![CDATA[
+                select count(*)
+                from roles
+                where name = 'GUEST'
+                ]]></sqlCheck>
+        </preConditions>
+
+        <insert tableName="roles">
+            <!-- Id is auto incremented -->
+            <column name="name" value="GUEST"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="user_name" value="test"/>
+            <column name="login" value="test"/>
+            <column name="password" value="$2a$10$NVQrP6gBwKh/.FI3G11EZOpcw586cFcfxrHM7fLlo4N6Bj7UCxO5i"/>
+            <column name="status" value="OK"/>
+            <column name="role_id" valueComputed="(select id from roles where name = 'GUEST')"/>
+        </insert>
+    </changeSet>
+
+    <changeSet author="Vitalii Ivanov" id="Create-user-role-with-user">
+        <preConditions onFail="MARK_RAN">
+            <sqlCheck expectedResult="0"><![CDATA[
+                select count(*)
+                from roles
+                where name = 'USER'
+                ]]></sqlCheck>
+        </preConditions>
+
+        <insert tableName="roles">
+            <!-- Id is auto incremented -->
+            <column name="name" value="USER"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="user_name" value="user"/>
+            <column name="login" value="user"/>
+            <column name="password" value="$2a$10$wBTxLBJmAzb79jFCImNFEu81Vqi7r3jH1QwfA8FtFJRgTvl8odAFe"/>
+            <column name="status" value="OK"/>
+            <column name="role_id" valueComputed="(select id from roles where name = 'USER')"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

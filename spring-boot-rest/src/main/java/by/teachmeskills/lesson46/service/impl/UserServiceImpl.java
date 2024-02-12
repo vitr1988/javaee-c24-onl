@@ -1,15 +1,17 @@
 package by.teachmeskills.lesson46.service.impl;
 
+import by.teachmeskills.lesson46.dto.CreateUserDto;
 import by.teachmeskills.lesson46.dto.UserDto;
 import by.teachmeskills.lesson46.entity.User;
 import by.teachmeskills.lesson46.mapper.UserMapper;
 import by.teachmeskills.lesson46.repository.UserJpaRepository;
 import by.teachmeskills.lesson46.repository.UserRepository;
+import by.teachmeskills.lesson46.service.RoleService;
 import by.teachmeskills.lesson46.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -21,10 +23,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private final RoleService roleService;
     private final UserRepository userRepository;
     private final UserJpaRepository userJpaRepository;
     private final RestTemplate restTemplate;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDto> getAll() {
@@ -51,8 +55,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto create(UserDto userDto) {
-        User user = userMapper.toEntity(userDto);
+    public UserDto create(CreateUserDto userDto) {
+        User user = userMapper.toEntity(userDto, roleService, passwordEncoder);
         userJpaRepository.save(user);
         return userMapper.toDto(user);
     }

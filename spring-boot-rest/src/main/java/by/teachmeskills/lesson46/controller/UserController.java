@@ -1,6 +1,8 @@
 package by.teachmeskills.lesson46.controller;
 
+import by.teachmeskills.lesson46.dto.CreateUserDto;
 import by.teachmeskills.lesson46.dto.UserDto;
+import by.teachmeskills.lesson46.entity.RoleEnum;
 import by.teachmeskills.lesson46.jpa.OffsetLimitPageable;
 import by.teachmeskills.lesson46.service.UserService;
 import io.swagger.v3.oas.annotations.Hidden;
@@ -16,6 +18,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -53,7 +58,10 @@ public class UserController {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
+    private final List<RoleEnum> roles;
+
     //    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping(produces = "application/xml")
     @Operation(operationId = "all", description = "Fetch all users")
     public List<UserDto> getAll(
@@ -102,9 +110,11 @@ public class UserController {
 
     @SneakyThrows
     @PostMapping
+    @PreAuthorize("@userRights.contains(T(by.teachmeskills.lesson46.entity.RoleEnum).ADMIN)")
     public ResponseEntity<UserDto> create(
+//            @AuthenticationPrincipal User user,
             @RequestPart("avatar") MultipartFile avatarFile
-            , @RequestPart("user") @Valid UserDto userDto) {
+            , @RequestPart("user") @Valid CreateUserDto userDto) {
         if (userDto.getId() != null) {
             return ResponseEntity.badRequest().build();
         }

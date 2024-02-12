@@ -1,13 +1,13 @@
 package by.teachmeskills.lesson46.config.security;
 
 import by.teachmeskills.lesson46.config.JwtHelper;
-import by.teachmeskills.lesson46.service.UserPrincipal;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -40,7 +40,7 @@ public class JwtFilter extends OncePerRequestFilter {
             return;
         }
         String jwt = header.substring(BEARER_.length()).trim();
-        UserPrincipal userPrincipal = jwtHelper.getTokenClaims(jwt);
+        final UserDetails userPrincipal = jwtHelper.getTokenClaims(jwt);
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(userPrincipal.getUsername(), userPrincipal.getPassword(),
                         userPrincipal.getAuthorities())

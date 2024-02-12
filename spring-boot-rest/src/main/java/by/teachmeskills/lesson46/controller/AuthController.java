@@ -1,22 +1,18 @@
 package by.teachmeskills.lesson46.controller;
 
 import by.teachmeskills.lesson46.config.JwtHelper;
-import by.teachmeskills.lesson46.service.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class AuthController {
@@ -38,13 +34,15 @@ public class AuthController {
 //                    (UserPrincipal) userDetails));
 //        }
         try {
-            UsernamePasswordAuthenticationToken authenticate = (UsernamePasswordAuthenticationToken) daoAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(login, password));
-//            SecurityContextHolder.getContext().setAuthentication(authenticate);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                    (UsernamePasswordAuthenticationToken) daoAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(login, password));
+//            SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             return ResponseEntity.ok(jwtHelper.generateToken(
                     AuthController.class.getSimpleName(),
                     source,
-                    authenticate));
+                    usernamePasswordAuthenticationToken));
         } catch (Exception e) {
+            log.error("Exception happens", e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 

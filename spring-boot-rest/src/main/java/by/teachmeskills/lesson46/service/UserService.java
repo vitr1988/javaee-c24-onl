@@ -1,5 +1,6 @@
 package by.teachmeskills.lesson46.service;
 
+import by.teachmeskills.lesson46.dto.CreateUserDto;
 import by.teachmeskills.lesson46.dto.UserDto;
 import org.springframework.data.domain.Pageable;
 
@@ -10,7 +11,7 @@ public interface UserService {
 
     List<UserDto> getAll(Pageable pageable);
 
-    UserDto create(UserDto userDto);
+    UserDto create(CreateUserDto userDto);
 
     void update(Long id, UserDto response);
 

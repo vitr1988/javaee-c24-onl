@@ -16,7 +16,6 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 
 @Accessors(chain = true)
 @Data
@@ -35,12 +34,11 @@ public class User {
 
     private String password;
 
-    private String oldName;
+//    private String oldName;
 
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @NotNull
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;

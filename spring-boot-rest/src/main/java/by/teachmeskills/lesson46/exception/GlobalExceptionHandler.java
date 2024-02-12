@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -47,6 +48,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseApiErrorDto handleNotFound(NotFoundException notFoundException) {
         return new ResponseApiErrorDto("RESOURCE_NOT_FOUND", "Данный пользователь с id %d не найден".formatted(notFoundException.getUserId()));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseApiErrorDto handleNotFound(AccessDeniedException runtimeException) {
+        return new ResponseApiErrorDto("ACCESS_DENIED", runtimeException.getMessage());
     }
 
     @ExceptionHandler(RuntimeException.class)

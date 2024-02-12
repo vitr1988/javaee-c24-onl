@@ -1,7 +1,6 @@
 package by.teachmeskills.lesson46.config;
 
 import by.teachmeskills.lesson46.entity.RoleEnum;
-import by.teachmeskills.lesson46.service.UserPrincipal;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -13,11 +12,15 @@ import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
@@ -29,6 +32,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Component
@@ -58,45 +63,12 @@ public class JwtHelper {
     private final JWSSigner jwtSigner;
     private final JWSVerifier jwsVerifier;
     private final Duration expiration;
-    private final UserDetailsService userDetailsService;
 
-    public JwtHelper(UserDetailsService userDetailsService,
-            @Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") Duration expiration) throws JOSEException {
-        this.userDetailsService = userDetailsService;
+    public JwtHelper(@Value("${jwt.secret}") String secret, @Value("${jwt.expiration}") Duration expiration) throws JOSEException {
         // Create HMAC signer
         this.jwtSigner = new MACSigner(secret);
         this.jwsVerifier = new MACVerifier(secret);
         this.expiration = expiration;
-    }
-
-    /**
-     * Метод генерации JWT-токена, содержащего информацию о пользователе и его правах доступа
-     *
-     * @param userInfo информация о пользователе
-     * @return строковое представление токена
-     */
-    @SneakyThrows
-    public String generateToken(String issuer, @Nullable String xSource, UserPrincipal userInfo) {
-        final Pair<Date, Date> issueAndExpirationTimes = getIssueAndExpirationTimes();
-        // Prepare JWT with claims set
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .issuer(issuer)
-                .subject(userInfo.getUsername())
-                .claim(TOKEN_CLAIM, UUID.randomUUID().toString())
-                .claim(PRIVILEGE_CLAIM, userInfo.getAuthorities())
-                .claim(SOURCE_CLAIM, Objects.toString(xSource, ""))
-                .issueTime(issueAndExpirationTimes.getLeft())
-                .expirationTime(issueAndExpirationTimes.getRight())
-                .build();
-
-        SignedJWT signedJWT = new SignedJWT(JWT_HEADER, claimsSet);
-
-        // Apply the HMAC protection
-        signedJWT.sign(jwtSigner);
-
-        // Serialize to compact form, produces something like that (jwt sample is below)
-        // eyJhbGciOiJIUzI1NiJ9.SGVsbG8sIHdvcmxkIQ.onO9Ihudz3WkiauDO2Uhyuz0Y18UASXlSc1eS0NkWyA
-        return signedJWT.serialize();
     }
 
     @SneakyThrows
@@ -107,7 +79,10 @@ public class JwtHelper {
                 .issuer(issuer)
                 .subject(userInfo.getName())
                 .claim(TOKEN_CLAIM, UUID.randomUUID().toString())
-                .claim(PRIVILEGE_CLAIM, userInfo.getAuthorities())
+                .claim(PRIVILEGE_CLAIM, userInfo.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .collect(Collectors.toList())
+                )
                 .claim(SOURCE_CLAIM, Objects.toString(xSource, ""))
                 .issueTime(issueAndExpirationTimes.getLeft())
                 .expirationTime(issueAndExpirationTimes.getRight())
@@ -131,17 +106,19 @@ public class JwtHelper {
      * @throws JOSEException
      */
     @Nullable
-    public UserPrincipal getTokenClaims(String token) throws JOSEException {
+    public UserDetails getTokenClaims(String token) throws JOSEException {
         final JWTClaimsSet jwtClaims;
         try {
             final SignedJWT decodedJWT = SignedJWT.parse(token);
             if (decodedJWT.verify(jwsVerifier) && isValid(jwtClaims = decodedJWT.getJWTClaimsSet())) {
                 String userName = decodedJWT.getJWTClaimsSet().getSubject();
-//                final RoleEnum[] userRights = this.<List<String>>getClaim(jwtClaims, PRIVILEGE_CLAIM)
-//                        .map(list -> list.stream().map(RoleEnum::valueOf).toArray(RoleEnum[]::new))
-//                        .orElse(new RoleEnum[]{});
-//                final String source = this.<String>getClaim(jwtClaims, SOURCE_CLAIM).orElseThrow();
-                return (UserPrincipal) userDetailsService.loadUserByUsername(userName);
+                final Stream<RoleEnum>userRights = this.<List<String>>getClaim(jwtClaims, PRIVILEGE_CLAIM)
+                        .map(list -> list.stream().map(RoleEnum::valueOf))
+                        .orElse(Stream.empty());
+                return new User(userName, StringUtils.EMPTY, userRights.map(RoleEnum::name)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList())
+                );
             }
         } catch (ParseException pe) {
             log.error("Invalid token {}", token, pe);

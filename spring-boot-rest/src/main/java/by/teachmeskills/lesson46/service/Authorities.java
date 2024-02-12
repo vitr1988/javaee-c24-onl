@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 public class Authorities {
 
     public static final String ADMIN = "ADMIN";
+    public static final String USER = "USER";
 
     public boolean isAdmin() {
         return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
