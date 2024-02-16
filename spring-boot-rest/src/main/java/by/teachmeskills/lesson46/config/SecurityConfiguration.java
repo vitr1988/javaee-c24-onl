@@ -58,7 +58,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(new Http403ForbiddenEntryPoint())
                 .and()
                 .authorizeRequests()
-                .antMatchers("/", AUTH_REQUEST_MAPPING).permitAll()
+                .antMatchers("/", AUTH_REQUEST_MAPPING, "/swagger-ui/**", "/docs.html", "/api/docs.yaml/**").permitAll()
                 .and()
                 .authorizeRequests()
                 .antMatchers("/api/users/*").hasAnyAuthority(ADMIN, USER)
