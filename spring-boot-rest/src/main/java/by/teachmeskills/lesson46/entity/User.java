@@ -40,7 +40,7 @@ public class User {
     private Status status;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id", nullable = false)
+    @JoinColumn(name = "role_id")
     private Role role;
 
 }
