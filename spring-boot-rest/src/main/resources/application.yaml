@@ -16,7 +16,8 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/tms?currentSchema=tms
+    url: jdbc:postgresql://host.docker.internal:5432/tms?currentSchema=tms
+#    url: jdbc:postgresql://localhost:5432/tms?currentSchema=tms
     username: tms
     password: qwerty
     driver-class-name: org.postgresql.Driver
