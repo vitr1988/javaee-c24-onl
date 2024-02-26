@@ -1,3 +1,4 @@
+
 spring:
   main:
     banner-mode: 'off'
@@ -16,10 +17,6 @@ spring:
       hibernate:
         format_sql: true
   datasource:
-    url: jdbc:postgresql://host.docker.internal:5432/tms?currentSchema=tms
-#    url: jdbc:postgresql://localhost:5432/tms?currentSchema=tms
-    username: tms
-    password: qwerty
     driver-class-name: org.postgresql.Driver
     hikari:
       leak-detection-threshold: 5000 # in msecs
@@ -46,3 +43,5 @@ springdoc:
 jwt:
   secret: '\\_//\\_//\\_//P@s$w0rD2024\\_//\\_//\\_//'
   expiration: '10m'
+server:
+  port: 8081

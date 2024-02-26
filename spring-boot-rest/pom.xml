@@ -155,6 +155,9 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                         </exclude>
+<!--                        <image>-->
+<!--                            <name>spring-boot-image</name>-->
+<!--                        </image>-->
                     </excludes>
                 </configuration>
             </plugin>
