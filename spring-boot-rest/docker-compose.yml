@@ -16,9 +16,8 @@ services:
 
   db:
 #    platform: linux/x86_64
-#    image: postgres:14-alpine
-    image: nexus-ci.corp.dev.vtb/pfomb-docker/postgres:15.3
-    container_name: postgres_14
+    image: postgres:15.3-alpine
+    container_name: postgres_15
     restart: always
     environment:
       - POSTGRES_DB=tms
@@ -27,7 +26,7 @@ services:
 #    ports:
 #      - '5432:5432'
     volumes:
-      - ./new-postgres-data:/var/lib/postgresql/data
+      - ./postgres-data:/var/lib/postgresql/data
 
   adminer:
     image: adminer
@@ -52,4 +51,4 @@ services:
       - '3306'
 
 volumes:
-  new-postgres-data:
+  postgres-data:
