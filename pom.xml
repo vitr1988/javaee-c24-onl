@@ -18,6 +18,7 @@
         <module>spring-mvc</module>
         <module>spring-boot</module>
         <module>spring-boot-rest</module>
+        <module>cloud</module>
     </modules>
 
 </project>
